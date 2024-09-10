@@ -9,8 +9,12 @@ import Auth from "./routes/authRoutes.js";
 configDotenv();
 const prisma = new PrismaClient();
 const app = express();
+const corsOptions = {
+    origin: true, //included origin as true
+    credentials: true, //included credentials as true
+};
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 app.use((req,res,next)=>{
