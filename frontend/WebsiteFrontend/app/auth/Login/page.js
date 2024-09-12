@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useLogin } from '@/hooks/useLogin';
 import { useAuthContext } from '@/hooks/useAuthContext';
 import { useRouter } from 'next/navigation'
+import Loader from '@/components/Loader/Loader';
 
 const Login = () => {
   // State to store all form input values
@@ -37,11 +38,12 @@ const Login = () => {
   };
 
   return (
+    <>
     <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10 bg-white min-h-screen ">
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-title-md2 font-bold text-black dark:text-white">Sign In</h2>
       </div>
-
+      {error && <p>{error}</p>}
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="flex flex-wrap items-center ">
           <div className="hidden w-full xl:block xl:w-1/2">
@@ -134,7 +136,9 @@ const Login = () => {
           </div>
         </div>
       </div>
+      {isLoading && <div className='w-full my-5 flex justify-center'><Loader/></div>}
     </div>
+    </>
   );
 };
 

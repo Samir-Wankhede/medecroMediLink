@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation'
 import React, { useState } from "react";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { useSignup } from "@/hooks/useSignup";
+import Loader from '@/components/Loader/Loader';
 
 const SignUpForm = () => {
   const [formData, setFormData] = useState({
@@ -340,6 +341,7 @@ const SignUpForm = () => {
           </form>
         </div>
       </div>
+      {isLoading && <div className='w-full my-5 flex justify-center'><Loader/></div>}
     </div>
   );
 };
