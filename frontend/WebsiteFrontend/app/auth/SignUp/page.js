@@ -1,49 +1,49 @@
 "use client";
-import { useRouter } from 'next/navigation'
 import React, { useState } from "react";
-import { useAuthContext } from "@/hooks/useAuthContext";
-import { useSignup } from "@/hooks/useSignup";
-import Loader from '@/components/Loader/Loader';
+import { useRouter } from 'next/navigation';
 
 const SignUpForm = () => {
   const [formData, setFormData] = useState({
     role: "user",
-    firstName: null,
-    lastName: null,
-    phoneNumber: null,
-    gender: null,
-    age: null,
-    address: null,
-    preferredLanguages: null,
-    name: null,
-    email: null,
-    specialization: null,
-    link: null,
-    contactNumber: null,
+    fullName: "",
+    phoneNumber: "",
+    gender: "",
+    age: "",
+    address: "",
+    preferredLanguages: "",
+    name: "",
+    specialization: "",
+    website: "",
+    contactNumber: "",
     proofOfIdentity: null,
-    password: null,
-    dob: null,
   });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
-  const {user} = useAuthContext();
-  // const [isSubmitting, setIsSubmitting] = useState(false);
-  const {signup, error, isLoading} = useSignup()
+
   const handleChange = (e) => {
-    const { name, value} = e.target;
-    console.log(value)
+    const { name, value, type, files } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === "file" ? files[0] : value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     console.log("Form Submitted", formData);
-    await signup(formData);
-    if(user){
-      return router.push('/home')
+
+    // Implement form submission logic here
+
+    // Redirect based on role
+    if (formData.role === "user") {
+      router.push('/models/user'); 
+    } else if (formData.role === "doctor") {
+      router.push('/models/doctor'); 
     }
+
+    setIsSubmitting(false);
   };
 
   return (
@@ -53,7 +53,7 @@ const SignUpForm = () => {
           Sign Up
         </h2>
       </div>
-      {error && <div className="text-red-500">{error}</div>}
+
       <div className="rounded-sm border border-stroke bg-white shadow-default">
         <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
           <h2 className="mb-9 text-2xl font-bold text-black sm:text-title-xl2">
@@ -76,48 +76,18 @@ const SignUpForm = () => {
               </select>
             </div>
 
-            <div className="mb-4">
-              <label className="mb-2.5 block font-medium text-black">
-                password
-              </label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Enter your first name"
-                className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary text-black"
-                required
-              />
-            </div>
-
             {formData.role === "user" && (
               <>
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black">
-                    First Name
+                    Full Name
                   </label>
                   <input
                     type="text"
-                    name="firstName"
-                    value={formData.firstName}
+                    name="fullName"
+                    value={formData.fullName}
                     onChange={handleChange}
-                    placeholder="Enter your first name"
-                    className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary text-black"
-                    required
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label className="mb-2.5 block font-medium text-black">
-                    Last Name
-                  </label>
-                  <input
-                    type="text"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    placeholder="Enter your last name"
+                    placeholder="Enter your full name"
                     className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary text-black"
                     required
                   />
@@ -158,12 +128,12 @@ const SignUpForm = () => {
 
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black">
-                    Date of Birth
+                    Age
                   </label>
                   <input
-                    type="date"
-                    name="dob"
-                    value={formData.dob}
+                    type="number"
+                    name="age"
+                    value={formData.age}
                     onChange={handleChange}
                     placeholder="Enter your age"
                     className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary text-black"
@@ -234,21 +204,6 @@ const SignUpForm = () => {
 
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black">
-                    email
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="Enter your Email"
-                    className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary text-black"
-                    required
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label className="mb-2.5 block font-medium text-black">
                     Specialization
                   </label>
                   <input
@@ -279,14 +234,14 @@ const SignUpForm = () => {
 
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black">
-                    Maps Link
+                    Website (optional)
                   </label>
                   <input
                     type="url"
-                    name="link"
-                    value={formData.link}
+                    name="website"
+                    value={formData.website}
                     onChange={handleChange}
-                    placeholder="Enter your maps link (if any)"
+                    placeholder="Enter your website link (if any)"
                     className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary text-black"
                   />
                 </div>
@@ -308,10 +263,10 @@ const SignUpForm = () => {
 
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black">
-                    License Number
+                    Proof of Identity
                   </label>
                   <input
-                    value={formData.proofOfIdentity}
+                    type="file"
                     name="proofOfIdentity"
                     onChange={handleChange}
                     className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary"
@@ -326,7 +281,7 @@ const SignUpForm = () => {
                 type="submit"
                 value="Sign Up"
                 className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 font-medium text-white transition hover:bg-opacity-90"
-                disabled={isLoading}
+                disabled={isSubmitting}
               />
             </div>
 
@@ -341,7 +296,6 @@ const SignUpForm = () => {
           </form>
         </div>
       </div>
-      {isLoading && <div className='w-full my-5 flex justify-center'><Loader/></div>}
     </div>
   );
 };
