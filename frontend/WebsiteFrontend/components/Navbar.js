@@ -3,8 +3,8 @@ import Link from 'next/link';
 export default function NavBar() {
   return (
     <nav className="bg-blue-600 text-white py-4 px-4 sm:px-6 md:px-28 shadow-lg">
-      <div className="container flex justify-between items-center max-w-screen">
-        <Link href="/" className="text-5xl font-bold">
+      <div className="container mx-auto flex justify-between items-center max-w-7xl">
+        <Link href="/" className="text-2xl font-bold">
           MediLink
         </Link>
         <div className="flex items-center space-x-2 md:space-x-4">

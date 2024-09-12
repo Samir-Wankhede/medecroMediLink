@@ -1,22 +1,12 @@
 "use client";
 import React, { useState } from 'react';
-import { useLogin } from '@/hooks/useLogin';
-import { useAuthContext } from '@/hooks/useAuthContext';
-import { useRouter } from 'next/navigation'
-import Loader from '@/components/Loader/Loader';
 
 const Login = () => {
   // State to store all form input values
   const [formData, setFormData] = useState({
-    role: "user",
-    email: null,
-    contact: null,
-    password: null
+    email: '',
+    password: ''
   });
-
-  const {login,isLoading,error} = useLogin();
-  const {user} = useAuthContext();
-  const router = useRouter();
 
   // Handle form input changes
   const handleChange = (event) => {
@@ -28,22 +18,17 @@ const Login = () => {
   };
 
   // Handle form submission
-  const handleSubmit = async(event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     console.log('Form Data:', formData);
-    await login(formData);
-    if(user){
-      return router.push('/home')
-    }
   };
 
   return (
-    <>
     <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10 bg-white min-h-screen ">
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-title-md2 font-bold text-black dark:text-white">Sign In</h2>
       </div>
-      {error && <p>{error}</p>}
+
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="flex flex-wrap items-center ">
           <div className="hidden w-full xl:block xl:w-1/2">
@@ -58,36 +43,6 @@ const Login = () => {
               </h2>
 
               <form onSubmit={handleSubmit}>
-              <div className="mb-4">
-                <label className="mb-2.5 block font-medium text-black">
-                  Role
-                </label>
-                <select
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                  className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary text-black"
-                >
-                  <option value="user">User</option>
-                  <option value="doctor">Doctor</option>
-                </select>
-              </div>
-              {
-                formData.role==="user"?
-                <div className="mb-4">
-                  <label className="mb-2.5 block font-medium text-black dark:text-white">Contact</label>
-                  <div className="relative">
-                    <input
-                      type="tel"
-                      name="contact"
-                      value={formData.contact}
-                      onChange={handleChange}
-                      placeholder="Enter your email"
-                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                    />
-                  </div>
-                </div>
-                :
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">Email</label>
                   <div className="relative">
@@ -101,8 +56,7 @@ const Login = () => {
                     />
                   </div>
                 </div>
-              }
-                
+
                 <div className="mb-6">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">Password</label>
                   <div className="relative">
@@ -136,9 +90,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-      {isLoading && <div className='w-full my-5 flex justify-center'><Loader/></div>}
     </div>
-    </>
   );
 };
 
