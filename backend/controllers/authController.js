@@ -47,7 +47,7 @@ const handleUserSignup = async (req, res) => {
         // Create a JWT token
         const token = createToken(contact);
         res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
-        res.status(201).json({ firstName: user.first_name, lastName: user.last_name, contact });
+        res.status(201).json({ name: user.first_name+ ' ' +user.last_name, contact, role: "user" });
       }
     } catch (err) {
       res.status(400).json({ error: err.message });
@@ -72,7 +72,7 @@ const handleUserSignup = async (req, res) => {
         if (passwordMatch) {
           const token = createToken(contact);
           res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
-          res.status(201).json({ firstName: user.first_name, lastName: user.last_name, contact });
+          res.status(200).json({ name: user.first_name+ ' ' +user.last_name, contact, role: "user" });
         } else {
           res.status(400).json({ error: "Incorrect password" });
         }
@@ -85,7 +85,7 @@ const handleUserSignup = async (req, res) => {
     }
   };
   const handleProfessionalSignup = async (req, res) => {
-    const { name, contact, password, email, address, mapsLink, specialty, licenseNumber } = req.body;
+    const { name, contact, password, email, address, mapsLink, specialty, licenseNumber, languages } = req.body;
   
     try {
       // Check if the medical professional already exists
@@ -111,6 +111,7 @@ const handleUserSignup = async (req, res) => {
             maps_link: mapsLink,
             specialty: specialty,
             license_number: licenseNumber,
+            languages: languages,
             medical_professional_password: {
               create: {
                 password_hash: hash,
@@ -122,7 +123,7 @@ const handleUserSignup = async (req, res) => {
         // Create a JWT token
         const token = createToken(email);
         res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
-        res.status(201).json({ name: professional.name, email });
+        res.status(201).json({ name: professional.name, email, role: "doctor" });
       }
     } catch (err) {
       res.status(400).json({ error: err.message });
@@ -152,7 +153,7 @@ const handleUserSignup = async (req, res) => {
           // Create a JWT token
           const token = createToken(email);
           res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
-          res.status(201).json({ name: professional.name, email });
+          res.status(200).json({ name: professional.name, email, role: "doctor" });
         } else {
           res.status(400).json({ error: "Incorrect password" });
         }

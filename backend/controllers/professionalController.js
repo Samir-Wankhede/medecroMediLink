@@ -7,7 +7,20 @@ const getProfessionalAppointmentList = async (req, res) => {
       const appointments = await prisma.appointments.findMany({
         where: {
           professional_id: medi_id,
-        }
+        },
+        include: {
+          user_data:{
+            select:{
+              first_name: true,
+              last_name: true
+            }
+          },
+          medical_professional:{
+            select:{
+              name: true,
+            }
+          }
+        },
       });
   
       res.status(200).json(appointments);

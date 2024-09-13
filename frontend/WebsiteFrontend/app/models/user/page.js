@@ -1,9 +1,10 @@
-import MediLinkName from "@/components/MediLinkName";
+"use client"
 import GetMedicalHelp from "@/components/GetMedicalHelp";
 import NavBarApp from "@/components/NavBarApp";
 import AppHistory from "@/components/AppHistory";
 import GeneralInfo from "@/components/GeneralInfo";
 import Image from "next/image";
+import withAuthentication from "@/authManagement/withAuthentication";
 
 const User = () => {
   return (
@@ -11,16 +12,16 @@ const User = () => {
       <NavBarApp />
       <div className="min-h-screen bg-white flex flex-col justify-between px-4 md:px-8 lg:px-16">
         <div className="p-6 flex flex-col items-center justify-center h-full space-y-10 md:space-y-12">
-          
-          {/* Get Medical Help button */}
-          <div className="w-full flex justify-start mt-16 md:mt-20">
-            <GetMedicalHelp />
-          </div>
-
+        
           {/* Main Content: MediLinkName and AppHistory */}
-          <div className="flex flex-wrap md:flex-nowrap items-center justify-center space-y-10 md:space-y-0 md:space-x-12 w-full mb-32">
+          <div className="flex flex-wrap md:flex-nowrap items-center justify-center md:space-x-12 w-full mb-32">
+
+            {/* Get Medical Help button */}
             <div className="flex flex-col justify-center items-center w-full md:w-1/2 space-y-6">
-              <MediLinkName />
+              <GetMedicalHelp />
+            </div>
+            
+            <div className="flex flex-col justify-center items-center w-full md:w-1/2 space-y-6">
               <AppHistory />
             </div>
             
@@ -52,4 +53,4 @@ const User = () => {
   );
 };
 
-export default User;
+export default withAuthentication(User);

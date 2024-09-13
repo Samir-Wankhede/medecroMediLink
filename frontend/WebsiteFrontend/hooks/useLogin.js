@@ -24,7 +24,7 @@ export const useLogin = () => {
             
             if (!response.ok){
                 setIsLoading(false)
-                setError(json.err)
+                setError(json.error)
             }
             if (response.ok){
                 //save user to local storage
@@ -46,10 +46,10 @@ export const useLogin = () => {
             })
     
             const json = await response.json()
-            
+            console.log(json)
             if (!response.ok){
                 setIsLoading(false)
-                setError(json.err)
+                setError(json.error)
             }
             if (response.ok){
                 //save user to local storage

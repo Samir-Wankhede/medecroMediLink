@@ -1,9 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'; 
 import { useRouter } from "next/navigation";
 import doctorsData from "@/app/data/doctorData/page";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 // Search component inside DoctorCard.js
 const SearchComp = ({ onSearch }) => {
@@ -36,7 +37,7 @@ const DoctorCard = ({ doctor }) => {
   const router = useRouter();
 
   const handleBooking = (appointmentType) => {
-    router.push(`/models/user/AppointmentEnquiry?doctorId=${doctor.name}&appointmentType=${appointmentType}`);
+    router.push(`/models/user/AppointmentEnquiry?doctorId=${doctor.medi_id}&doctorName=${doctor.name}&appointmentType=${appointmentType}`);
   };
 
   return (
@@ -44,16 +45,16 @@ const DoctorCard = ({ doctor }) => {
       <p className="text-xl font-bold mb-4 text-center">Name of Doctor: {doctor.name}</p>
       <div className="text-left mb-4">
         <p className="text-lg mb-2">
-          <span className="font-semibold">Location:</span> {doctor.location}
+          <span className="font-semibold">Location:</span> {doctor.address}
         </p>
         <p className="text-lg mb-2">
-          <span className="font-semibold">Languages:</span> {doctor.languages.join(', ')}
+          <span className="font-semibold">Languages:</span> {doctor.languages}
         </p>
         <p className="text-lg mb-2">
-          <span className="font-semibold">Specialization:</span> {doctor.specialization}
+          <span className="font-semibold">Specialization:</span> {doctor.specialty}
         </p>
         <p className="text-lg mb-2">
-          <span className="font-semibold">Phone No:</span> {doctor.phone}
+          <span className="font-semibold">Phone No:</span> {doctor.phone_number}
         </p>
       </div>
       <div className="flex justify-center space-x-4">
@@ -76,16 +77,35 @@ const DoctorCard = ({ doctor }) => {
 
 // Main component that includes search and the list of doctors
 const DoctorsList = () => {
-
-
-  const [filteredDoctors, setFilteredDoctors] = useState(doctorsData);
+  const { user } = useAuthContext();
+  const [doctorRecords, setDoctorRecords] = useState([]);
+  const [filteredDoctors, setFilteredDoctors] = useState(doctorRecords);
 
   const handleSearch = (query) => {
-    const filtered = doctorsData.filter((doctor) =>
-      doctor.location.toLowerCase().includes(query.toLowerCase())
+    const filtered = doctorRecords.filter((doctor) =>
+      doctor.address.toLowerCase().includes(query.toLowerCase())
     );
     setFilteredDoctors(filtered);
   };
+
+  useEffect(()=>{
+    const fetchRecords = async() => {
+      if(user){
+        const response = await fetch('http://localhost:4000/api/user/medical-list',{
+          method: "GET",
+          headers: {"Content-Type":"application/json"},
+          credentials: 'include'
+        })
+        if (response.ok){
+          const data = await response.json();
+          console.log(data)
+          setDoctorRecords(data)
+          setFilteredDoctors(data)
+        }
+      }
+    }
+    fetchRecords();
+  },[])
 
   return (
     <div>

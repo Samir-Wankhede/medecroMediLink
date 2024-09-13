@@ -1,26 +1,44 @@
 "use client";
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
-import doctorsData from '@/app/data/doctorData/page';
+import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import doctorsData from "@/app/data/doctorData/page";
+import withUserAuthentication from "@/authManagement/withUserAuthentication";
 
-export default function AppointmentEnquiry() {
+function AppointmentEnquiry() {
   const searchParams = useSearchParams();
   const doctorId = searchParams.get("doctorId");
+  const doctorname = searchParams.get("doctorName");
   const appointmentType = searchParams.get("appointmentType");
 
   const [doctor, setDoctor] = useState(null);
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
-  const [location, setLocation] = useState('');
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  const [location, setLocation] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
-    const selectedDoctor = doctorsData.find(doc => doc.name === doctorId);
-    setDoctor(selectedDoctor);
-  }, [doctorId]);
+    setDoctor(doctorname);
+  }, [doctorname]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    alert(`Appointment booked with ${doctor?.name} on ${date} at ${time} (${appointmentType})`);
+    const response = await fetch('http://localhost:4000/api/user/request-appointment',{
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      credentials: 'include',
+      body: JSON.stringify({"professional_id": parseInt(doctorId), "appointment_date": `${date}T${time}:00.000Z`})
+    })
+    if (response.ok){
+      alert(
+        `Appointment booked with ${doctor} on ${date} at ${time} (${appointmentType})`
+      );
+    }
+    else{
+      alert(
+        `An error occured in booking`
+      );
+    }
+    return router.replace('/models/user');
   };
 
   if (!doctor) {
@@ -30,17 +48,13 @@ export default function AppointmentEnquiry() {
   return (
     <div className="bg-white min-h-screen p-4">
       <h1 className="text-2xl font-bold text-center mb-6">
-        Book an Appointment with {doctor.name}
+        Book an Appointment with {doctor}
       </h1>
 
-      <div className="text-lg mb-6">
-        <p><strong>Specialization:</strong> {doctor.specialization}</p>
-        <p><strong>Location:</strong> {doctor.location}</p>
-        <p><strong>Languages:</strong> {doctor.languages.join(', ')}</p>
-        <p><strong>Phone No:</strong> {doctor.phone}</p>
-      </div>
-
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4 mx-auto justify-center flex-col items-center"
+      >
         <div>
           <label>Date:</label>
           <input
@@ -61,7 +75,7 @@ export default function AppointmentEnquiry() {
             className="border border-gray-300 rounded-md p-2 w-full"
           />
         </div>
-        {appointmentType === 'offline' && (
+        {appointmentType === "offline" && (
           <div>
             <label>Preferred Location (Offline):</label>
             <input
@@ -73,10 +87,17 @@ export default function AppointmentEnquiry() {
             />
           </div>
         )}
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-          Book Appointment
-        </button>
+        <div className="flex justify-center">
+          <button
+            type="submit"
+            className="bg-blue-500 text-white px-4 py-2 m-6 rounded-md hover:bg-blue-600"
+          >
+            Book Appointment
+          </button>
+        </div>
       </form>
     </div>
   );
 }
+
+export default withUserAuthentication(AppointmentEnquiry);

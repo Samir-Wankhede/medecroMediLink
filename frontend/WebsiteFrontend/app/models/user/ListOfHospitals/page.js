@@ -1,4 +1,5 @@
 "use client";
+import withUserAuthentication from "@/authManagement/withUserAuthentication";
 import DoctorsList from "@/components/DoctorCard";
 
 const Page = () => {
@@ -12,4 +13,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default withUserAuthentication(Page);

@@ -12,6 +12,7 @@ const getMedicalList = async (req, res) => {
           maps_link: true,
           specialty: true,
           license_number: true,
+          languages: true,
         },
       });
       res.status(200).json(medicalList);
@@ -103,7 +104,16 @@ const getAppointmentList = async (req, res) => {
         const appointments = await prisma.appointments.findMany({
             where: {
                 user_id: user_id,
-            }
+            },
+            include: {
+                medical_professional: {
+                    select: {
+                        name: true,
+                        specialty: true,
+                        phone_number: true,
+                    },
+                },
+            },
         });
       res.status(200).json(appointments);
     } catch (err) {

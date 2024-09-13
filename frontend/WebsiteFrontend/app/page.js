@@ -1,9 +1,21 @@
 'use client';
+import withLoggedinAuthentication from '@/authManagement/withLoggedinAuthentication';
+import Loader from '@/components/Loader/Loader';
 import NavBar from '@/components/Navbar';
+import { useAuthContext } from '@/hooks/useAuthContext';
 import Image from 'next/image';
+import { redirect } from 'next/navigation';
+import { useLayoutEffect } from 'react';
 
-export default function Home() {
+ function Home() {
+  const { user } = useAuthContext();
+  // useLayoutEffect(()=>{
+  //   if(user){
+  //     redirect(`/models/${user.role}`)
+  //   }
+  // },[user])
   return (
+    user? <Loader/> :
     <>
       <NavBar />
       <div className="bg-white min-h-screen">
@@ -37,3 +49,5 @@ export default function Home() {
     </>
   );
 }
+
+export default withLoggedinAuthentication(Home);

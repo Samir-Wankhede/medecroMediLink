@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { useSignup } from "@/hooks/useSignup";
 import Loader from '@/components/Loader/Loader';
+import withLoggedinAuthentication from '@/authManagement/withLoggedinAuthentication';
 
 const SignUpForm = () => {
   const [formData, setFormData] = useState({
@@ -41,9 +42,6 @@ const SignUpForm = () => {
     e.preventDefault();
     console.log("Form Submitted", formData);
     await signup(formData);
-    if(user){
-      return router.push('/home')
-    }
   };
 
   return (
@@ -346,4 +344,4 @@ const SignUpForm = () => {
   );
 };
 
-export default SignUpForm;
+export default withLoggedinAuthentication(SignUpForm);
