@@ -1,54 +1,63 @@
-"use client"
+"use client";
 import GetMedicalHelp from "@/components/GetMedicalHelp";
 import NavBarApp from "@/components/NavBarApp";
 import AppHistory from "@/components/AppHistory";
 import GeneralInfo from "@/components/GeneralInfo";
 import Image from "next/image";
 import withAuthentication from "@/authManagement/withAuthentication";
+import { HeroHighlight } from "@/components/ui/hero-highlight";
 
 const User = () => {
   return (
     <>
       <NavBarApp />
-      <div className="min-h-screen bg-white flex flex-col justify-between px-4 md:px-8 lg:px-16">
-        <div className="p-6 flex flex-col items-center justify-center h-full space-y-10 md:space-y-12">
-        
-          {/* Main Content: MediLinkName and AppHistory */}
-          <div className="flex flex-wrap md:flex-nowrap items-center justify-center md:space-x-12 w-full mb-32">
+      <HeroHighlight>
+        <div className="min-h-screen flex flex-col justify-between px-4 md:px-8 lg:px-16">
+          <div className="p-6 flex flex-col items-start h-full space-y-8 md:space-y-10">
+            <div className="flex flex-col md:flex-row justify-between w-full items-center mt-32">
+              <div className="w-full md:w-1/2 flex justify-start">
+                <Image
+                  src="/images/AllrounderDoc.png"
+                  alt="Allrounder Doctor"
+                  width={1000}
+                  height={1000}
+                  className="max-w-full h-auto animate-float"
+                />
+              </div>
+              <div className="w-full md:w-1/2 flex justify-center md:justify-end mt-4 md:mt-0 md:pr-20">
 
-            {/* Get Medical Help button */}
-            <div className="flex flex-col justify-center items-center w-full md:w-1/2 space-y-6">
-              <GetMedicalHelp />
+                <GetMedicalHelp />
+              </div>
             </div>
-            
-            <div className="flex flex-col justify-center items-center w-full md:w-1/2 space-y-6">
-              <AppHistory />
-            </div>
-            
-            {/* Image next to content */}
-            <div className="w-full md:w-1/2 flex justify-center items-center">
-              <Image
-                src="/images/doc.svg"
-                alt="online doctor"
-                width={500}
-                height={500}
-                className="max-w-full h-auto md:block"
-              />
-            </div>
-          </div>
 
-          {/* General Info Section */}
-          <div className="w-full mt-12">
-            <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700 w-full" />
-            <div className="w-full mt-14 text-center">
-              <h1 className="text-black text-lg sm:text-xl md:text-2xl">
-                Some general illness and precautions
-              </h1>
-              <GeneralInfo />
+            <div className="flex flex-col md:flex-row justify-between w-full items-center mt-12">
+              <div className="w-full md:w-1/2 flex justify-center md:justify-start md:pl-52">
+                <AppHistory />
+              </div>
+              <div className="w-full md:w-1/2 flex justify-center md:justify-end mt-4 md:mt-0">
+                <Image
+                  src="/images/stethoscope.png"
+                  alt="Stethoscope"
+                  width={450}
+                  height={450}
+                  className="max-w-full h-auto animate-float"
+                />
+              </div>
+            </div>
+
+            {/* General Info Section */}
+            <div className="w-full mt-10">
+              <hr className="h-px my-6 border-0 border-cyan-400 bg-cyan-400 w-full" />
+              <div className="w-full mt-8 text-center">
+                <h1 className="text-gray-800 text-lg sm:text-xl md:text-4xl">
+                  Some General illness and Precautions
+                </h1>
+                <GeneralInfo />
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </HeroHighlight>
     </>
   );
 };

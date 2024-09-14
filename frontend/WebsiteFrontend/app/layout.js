@@ -2,6 +2,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import NavBar from "@/components/Navbar";
 import { AuthContextProvider } from "@/context/authContext";
+import { HeroHighlight } from "@/components/ui/hero-highlight";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
